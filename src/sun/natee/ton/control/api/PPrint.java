@@ -40,7 +40,7 @@ public class PPrint {
     static Date date = new Date();
     static int LineCount = 0;
     private ConnectDB conn=new ConnectDB();
-    boolean EJPrint = false;
+    boolean EJPrint = true;
     CommDriver commDriver;
 
     public void PPrint() {
@@ -48,7 +48,14 @@ public class PPrint {
     
     public static void main(String[] args) {
         PPrint p = new PPrint();
-        PPrint.listComport();
+        RFIDBean bean = new RFIDBean();
+        bean.setRFID_ID("480042F983");
+        bean.setRFID_MONEY(1000.0);
+        bean.setFREE_MONEY(0.0);
+        bean.setCREDIT_MONEY(0.0);
+        bean.setBILL_ID("0000147");
+        bean.setBILL_DISCOUNT(100.0);
+        p.printBill(bean);
         p.closeComport();
     }
 
@@ -350,7 +357,7 @@ public class PPrint {
                 PUtility.ShowError(ex.getMessage());
             }
         }
-        String TempFile = PublicVar.HWRec_EJDailyPath + "/log" + PublicVar.MacNo + ".gif";
+        String TempFile = PublicVar.HWRec_EJDailyPath + "log" + PublicVar.MacNo + ".gif";
         TextWriter TextWrite = new TextWriter();
         File fObject = new File(TempFile);
         if (!fObject.canRead()) {
@@ -358,7 +365,7 @@ public class PPrint {
         }
         TextWrite.writeToText(TempFile, PrintMsg);
         if (EJPrint) {
-            String TempBill = PublicVar.HWRec_EJDailyPath + "/tempbill.txt";
+            String TempBill = PublicVar.HWRec_EJDailyPath + "tempbill.txt";
             if (!fObject.canRead()) {
                 TextWrite.writeToText(TempBill, "");
             }
@@ -481,14 +488,14 @@ public class PPrint {
     public void printBill(RFIDBean bean){
         SimpleDateFormat simp1 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         RFIDBean profile = conn.getDataRFID(bean.getRFID_ID());
-        String money_total;
+        double money_total;
         try{
-            money_total=""+(bean.getRFID_MONEY()+bean.getFREE_MONEY()+bean.getCREDIT_MONEY());
+            double money =bean.getBILL_CASH();
+            double free = bean.getFREE_MONEY();
+            double credit = bean.getCREDIT_MONEY();
+            money_total=(money+free+credit);
         }catch(Exception e){
-            money_total="    ";
-        }
-        if(money_total.length()==3){
-            money_total=" "+money_total;
+            money_total=0.00;
         }
         ConnectDB con = new ConnectDB();
         String Header[] = new String[]{"","","",""};
@@ -525,21 +532,17 @@ public class PPrint {
             Print_Str("========================================");
             Print_Str("#รายการ             จำนวน        รวมเงิน");
             Print_Str("........................................");
-            double moneyFree = bean.getFREE_MONEY();
-            int countF =0;
-            String str;
-            if(moneyFree>0){
-                countF =1;
-                str = "";
-            }else{
-                str = "   ";
+            
+            int countF =1;
+            if(bean.getFREE_MONEY()==0){
+                countF = 0;
             }
-            Print_Str("เติมเงินบัตร RFID        1       "+bean.getRFID_MONEY());
-            Print_Str("ค่ามัดจำบัตร RFID        "+countF+"       "+str+bean.getFREE_MONEY());
+            Print_Str("เติมเงินบัตร RFID        1       "+getLengthStr(bean.getRFID_MONEY()));
+            Print_Str("ค่ามัดจำบัตร RFID        "+countF+"       "+getLengthStr(bean.getFREE_MONEY()));
             Print_Str("......................................");
-            Print_Str("              รวมเงิน :        "+money_total+"");
-            Print_Str("               ส่วนลด :        "+bean.getBILL_DISCOUNT());
-            Print_Str("                 สุทธิ :        "+bean.getRFID_MONEY()+"");
+            Print_Str("              รวมเงิน :        "+getLengthStr(money_total)+"");
+            Print_Str("               ส่วนลด :        "+getLengthStr(bean.getBILL_DISCOUNT()));
+            Print_Str("                 สุทธิ :        "+getLengthStr(bean.getRFID_MONEY()));
             Print_Str("");
             Print_Str("========================================");
             Print_Str("ยอดเงินคงเหลือในบัตร : "+profile.getRFID_MONEY()+" บาท");            
@@ -560,6 +563,19 @@ public class PPrint {
         } else {
             PUtility.ShowError("เครื่องพิมพ์ใบกำกับภาษีไม่สามารถพิมพ์ได้ ...");
         }
+    }
+    
+    public static String getLengthStr(double dd){
+        if(dd<1){
+            return "       "+dd;
+        }else if(dd<100){
+            return "      "+dd;
+        }else if(dd<1000){
+            return "     "+dd;
+        }else if(dd<10000){
+            return "    "+dd;
+        }
+        return "   "+dd;
     }
     
     public void printTest(String COMPORT){
@@ -584,6 +600,20 @@ public class PPrint {
             Print_Str("");
             Print_Str("========================================");
             Print_Str("        Start Login DATE: "+simp1.format(new Date())+"     ");
+            Print_Str("========================================");            
+            Print_Str("");
+            CutPaper();
+            closePrint();
+        }
+    }
+    
+    public void printLogout() {
+        SimpleDateFormat simp1 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        if (OpenPrint(TheValue.COMPORT_PRINTER)) {
+            InitPrinter();
+            Print_Str("");
+            Print_Str("========================================");
+            Print_Str("        End Logout DATE: "+simp1.format(new Date())+"     ");
             Print_Str("========================================");            
             Print_Str("");
             CutPaper();

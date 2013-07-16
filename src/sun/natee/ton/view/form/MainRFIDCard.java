@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import sun.natee.ton.control.api.PPrint;
 
 public class MainRFIDCard extends javax.swing.JFrame {
     public static JButton buttonLogout;
@@ -28,7 +29,7 @@ public class MainRFIDCard extends javax.swing.JFrame {
         loadLoginForm();
         
         runtime();
-        //createFullScreen();
+        createFullScreen();
     }
 
     private void loadLoginForm() {
@@ -76,6 +77,8 @@ public class MainRFIDCard extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem13 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem11 = new javax.swing.JMenuItem();
@@ -84,6 +87,11 @@ public class MainRFIDCard extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ระบบจัดการข้อมูลผู้ใช้งาน RFID Card (V.0.10)");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         panelMain.setLayout(new java.awt.BorderLayout());
 
@@ -212,6 +220,16 @@ public class MainRFIDCard extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItem10);
+        jMenu2.add(jSeparator3);
+
+        jMenuItem13.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jMenuItem13.setText("Log การขาย");
+        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem13ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem13);
 
         jMenuBar1.add(jMenu2);
 
@@ -390,6 +408,23 @@ public class MainRFIDCard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
+    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
+        Runtime r = Runtime.getRuntime();
+        String pwd = JOptionPane.showInputDialog("Input number to unlock: ");
+        if(pwd!=null&&pwd.equals("000000")){
+            try {
+                 r.exec("notepad tempbill.txt");
+            } catch (Exception e) {
+            }
+        }
+    }//GEN-LAST:event_jMenuItem13ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        PPrint p = new PPrint();
+        p.printLogout();
+        p.closePrint();
+    }//GEN-LAST:event_formWindowClosing
+
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel("com.jtattoo.plaf.texture.TextureLookAndFeel");
@@ -421,6 +456,7 @@ public class MainRFIDCard extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
+    private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -433,6 +469,7 @@ public class MainRFIDCard extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPanel panelMain;
     private javax.swing.JLabel txtTime;
     // End of variables declaration//GEN-END:variables
