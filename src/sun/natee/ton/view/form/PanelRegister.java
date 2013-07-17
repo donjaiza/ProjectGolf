@@ -2222,7 +2222,15 @@ public class PanelRegister extends javax.swing.JPanel {
                     billno.setR_Price(freePay);
                     billno.setR_Total(freePay);
                     billno.setR_NetTotal(freePay);
-                    BillNoDB.saveMoneyFreePay(billno);//save into table t_sale[free money]               
+                    BillNoDB.saveMoneyFreePay(billno);//save into table t_sale[free money]
+                }
+                
+                //save discount to t_sale
+                if(bean.getBILL_DISCOUNT()>0){
+                    billno.setR_Price(bean.getBILL_DISCOUNT());
+                    billno.setR_Total(bean.getBILL_DISCOUNT());
+                    billno.setR_NetTotal(bean.getBILL_DISCOUNT());
+                    BillNoDB.saveBillDiscount(billno);//save into table t_sale[free money]
                 }
                 stmt.close();
                 final RFIDBean beanThread = bean;

@@ -93,6 +93,31 @@ public class BillNoDB {
         }
     }
     
+    public static void saveBillDiscount(billnoBean billno){
+        String value2 = "ค่าส่วนลด";
+        String sqlFree = "INSERT INTO T_SALE"
+                + "(R_Index,R_Refno,R_Table,"
+                + "R_Date,R_Time,MacNo,Cashier,R_PluCode,"
+                + "R_PName,R_Stock,R_ETD,R_Quan,R_Price,R_Total,R_NetTotal)"
+                + "VALUES('" + billno.getB_Refno() + "/003','" + billno.getB_Refno() + "','000',"
+                + "curdate(),curtime(),'" + billno.getB_MacNo() + "','" + billno.getB_Cashier() + "','0000000000002',"
+                + "'" + ThaiUtil.Unicode2ASCII(value2) + "','N','E','1','" 
+                + billno.getR_Price() + "','" + billno.getR_Total() + "','" + billno.getR_NetTotal() + "')";
+        try {
+            ConnectDB con = new ConnectDB();
+            Statement stmt = con.connectOpen().createStatement();
+            int i = stmt.executeUpdate(sqlFree);
+            if (i > -1) {
+                System.out.println("insert t_sale money discount done.");
+            }else{
+                System.out.println("not insert t_sale money discount !!!");
+            }
+            con.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "MySQL ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
     public static void main(String[] args) {        
         billnoBean bean = new billnoBean();
         bean.setB_Total(0);

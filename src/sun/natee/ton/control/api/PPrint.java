@@ -491,9 +491,9 @@ public class PPrint {
         double money_total;
         try{
             double money =bean.getBILL_CASH();
-            double free = bean.getFREE_MONEY();
+            //double free = bean.getFREE_MONEY();
             double credit = bean.getCREDIT_MONEY();
-            money_total=(money+free+credit);
+            money_total=(money+credit);
         }catch(Exception e){
             money_total=0.00;
         }
@@ -527,10 +527,10 @@ public class PPrint {
             Print_Str(Header[2]);
             Print_Str(Header[3]);
             Print_Str("DATE: "+simp1.format(new Date())+" Bill: "+bean.getBILL_ID());
-            Print_Str("       "+profile.getCUST_ID()+"คุณ "+profile.getMEMBER_NAME()+" "+profile.getMEMBER_SURNAME());
+            Print_Str("       "+profile.getCUST_ID()+"คุณ   "+profile.getMEMBER_NAME()+" "+profile.getMEMBER_SURNAME());
             Print_Str("");
             Print_Str("========================================");
-            Print_Str("#รายการ             จำนวน        รวมเงิน");
+            Print_Str("รายการ          จำนวน        รวมเงิน(บาท)");
             Print_Str("........................................");
             
             int countF =1;
@@ -539,10 +539,11 @@ public class PPrint {
             }
             Print_Str("เติมเงินบัตร RFID        1       "+getLengthStr(bean.getRFID_MONEY()));
             Print_Str("ค่ามัดจำบัตร RFID        "+countF+"       "+getLengthStr(bean.getFREE_MONEY()));
-            Print_Str("......................................");
-            Print_Str("              รวมเงิน :        "+getLengthStr(money_total)+"");
+            Print_Str("               รวมทั้งสิ้น        "+getLengthStr(bean.getRFID_MONEY()+bean.getFREE_MONEY()));
+            Print_Str("........................................");
             Print_Str("               ส่วนลด :        "+getLengthStr(bean.getBILL_DISCOUNT()));
-            Print_Str("                 สุทธิ :        "+getLengthStr(bean.getRFID_MONEY()));
+            Print_Str("              รวมเงิน :        "+getLengthStr(money_total)+"");
+            Print_Str("           สุทธิเติมเงิน :        "+getLengthStr(bean.getRFID_MONEY()));
             Print_Str("");
             Print_Str("========================================");
             Print_Str("ยอดเงินคงเหลือในบัตร : "+profile.getRFID_MONEY()+" บาท");            
@@ -557,7 +558,7 @@ public class PPrint {
             Print_Str("");
             Print_Str("");
             Print_Str("");
-            Print_Str("");            
+            Print_Str("");
             CutPaper();
             closePrint();
         } else {
