@@ -121,7 +121,7 @@ public class ControlRFID implements SerialPortEventListener{
                 break;
 
             // If break event append BREAK RECEIVED message.
-            case javax.comm.SerialPortEvent.BI:
+            case SerialPortEvent.BI:
                 messageAreaIn.append("\n--- BREAK RECEIVED ---\n");
         }
     }

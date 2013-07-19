@@ -1,5 +1,6 @@
 package sun.natee.ton.control.api;
 
+import gnu.io.CommDriver;
 import sun.natee.ton.view.form.TheValue;
 import sun.natee.ton.model.database.ConnectDB;
 import java.io.File;
@@ -18,7 +19,6 @@ import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import javax.comm.CommDriver;
 
 public class PPrint {
     static SerialPort serialPort;
@@ -41,7 +41,7 @@ public class PPrint {
     static int LineCount = 0;
     private ConnectDB conn=new ConnectDB();
     boolean EJPrint = true;
-    CommDriver commDriver;
+    private CommDriver commDriver;
 
     public void PPrint() {
     }
